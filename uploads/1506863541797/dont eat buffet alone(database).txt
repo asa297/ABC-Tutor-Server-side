@@ -1,0 +1,34 @@
+ --------------
+|user table  |    
+ --------------
++userId (varchar) primary key
++fname (varchar)
++lname (varchar)
++sex (varchar)
++birthDay (date)
++courtesy (integer)
++polite (integer)
++punctuality (integer)
++reliability (integer)
+______________________________
+ --------------
+|rooms table |    
+ --------------
++roomId (varchar) Primary key
++FK_promotionId (varchar)
++FK_userId (varchar)
++roomName (varchar)
++currentPeople (integer)
++maxPeople (integer)
++description (varchar)
++location (varchar)
+______________________________
+ -------------------
+|promotions table |    
+ -------------------
++promotionId (primary key)
++cover(varchar)
++tStart (date)
++tEnd (date)
++price (integer)
+______________________________
