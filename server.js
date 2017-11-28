@@ -6,14 +6,15 @@ var io = require('socket.io').listen(server);
 var cors = require('cors')
 var bodyParser = require("body-parser");
 var mysql = require('mysql');
+
 var omise = require('omise')({
   'secretKey': 'skey_test_5a1j2ntf48hwtsp877s',
   'omiseVersion': '2015-09-10'
 });
 var mysqlPool = mysql.createPool({
-    host     : 'xxx.xxx.xxx.xxx',
+    host     : '172.104.167.197',
     user     : 'root',
-    password : 'xxx.xxx.xxx.xxx',
+    password : 'my-secret-pw',
     database : 'tutordb'
 });
 app.use(bodyParser.urlencoded({
@@ -25,18 +26,19 @@ app.use(cors({credentials: true}));
 app.get('/',function(req,res) {
 	res.send('for socker.ioo');
 });
-app.post('/checkout/:course_id/:branch_id/:user_id/:ts', function(req, res ,next) {
+app.post('/checkout/:course_id/:branch_id/:user_id/:ts/:amount', function(req, res ,next) {
   var token = req.body.omiseToken
   var course_id = req.params.course_id
   var branch_id = req.params.branch_id
   var user_id = req.params.user_id
   var purchase_ts = req.params.ts
+  var myAmount = req.params.amount
 
   //console.log(course_id + " " + branch_id +" " +user_id+" "+ purchase_ts );
   //console.log(req.body)
-
+	console.log(myAmount)
     omise.charges.create({
-    'amount': '10025', // 10 Baht
+    'amount': myAmount + '00' ,
     'currency': 'thb',
     'card': token
   }, function(err, resp) {
@@ -66,6 +68,8 @@ app.post('/checkout/:course_id/:branch_id/:user_id/:ts', function(req, res ,next
       res.send('fail' + err)
       throw resp.failure_code;
     }
+
+
   });
 })
 
