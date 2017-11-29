@@ -8,11 +8,14 @@ var app = new Express()
 // var db = mongojs('mongodb://172.104.167.197:27017/tutor', ['course_chat']);
 //var db = mongojs('mongodb://benkung:1320@ds061345.mlab.com:61345/bendb', ['data_info','pic_info']);
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://172.104.167.197:27017/tutor';
+var url = 'mongodb://abc-tutor:tutor-12123@172.104.167.197:27017/tutor';
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
+// parse application/json
 
+app.use(bodyParser.json())
 
-app.use(bodyParser.json({limit:1024102420}));
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
 	 var firstPath = 'uploads'
@@ -169,50 +172,52 @@ app.post('/updateuser', function(req,res){
 	});
 });
 
-app.post('/insertcoursecontent', function(req,res){
-	mysqlPool.getConnection(function(error,connection) {
-/*
-    //var content_id = req.body.content_id
-		var course_id = req.body.course_id
-		var content_title = req.body.content_title
-		var content_des =  req.body.content_des
-		var content_ts = req.body.content_ts
-		//var query = "INSERT INTO course_content VALUES("+content_id+","+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
-    var query = "INSERT INTO `course_content`(course_id`, `content_title`, `content_des`, `content_ts`) VALUES("+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
-		//connection.query(query)
+// app.post('/insertcoursecontent', function(req,res){
+// 	mysqlPool.getConnection(function(error,connection) {
+// /*
+//     //var content_id = req.body.content_id
+// 		var course_id = req.body.course_id
+// 		var content_title = req.body.content_title
+// 		var content_des =  req.body.content_des
+// 		var content_ts = req.body.content_ts
+// 		//var query = "INSERT INTO course_content VALUES("+content_id+","+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
+//     var query = "INSERT INTO `course_content`(course_id`, `content_title`, `content_des`, `content_ts`) VALUES("+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
+// 		//connection.query(query)
+//
+//     connection.query(query, function (error, results, fields) {
+//       console.log("content_id = " + results.insertId)
+//       var data = {
+//         content_id: results.insertId
+//       }
+//       res.json(data);
+//       if (error) {
+//         return connection.rollback(function() {
+//           throw error;
+//         });
+//       }
+//     });
+// */
+//     var course_id = req.body.course_id
+// 		var content_title = req.body.content_title
+// 		var content_des =  req.body.content_des
+// 		var content_ts = req.body.content_ts
+//     var query = "INSERT INTO `course_content`(`course_id`, `content_title`, `content_des`, `content_ts`) VALUES("+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
+//
+//     connection.query(query, function (error, results, fields) {
+//     if (error) throw error;
+//       console.log("content_id = " + results.insertId);
+//     var data = {
+//       content_id: results.insertId
+//     }
+//     res.json(data);
+//
+//   });
+//   console.log(query)
+//   res.end();
+// 	});
+// });
 
-    connection.query(query, function (error, results, fields) {
-      console.log("content_id = " + results.insertId)
-      var data = {
-        content_id: results.insertId
-      }
-      res.json(data);
-      if (error) {
-        return connection.rollback(function() {
-          throw error;
-        });
-      }
-    });
-*/
-    var course_id = req.body.course_id
-		var content_title = req.body.content_title
-		var content_des =  req.body.content_des
-		var content_ts = req.body.content_ts
-    var query = "INSERT INTO `course_content`(`course_id`, `content_title`, `content_des`, `content_ts`) VALUES("+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
 
-    connection.query(query, function (error, results, fields) {
-    if (error) throw error;
-      console.log("content_id = " + results.insertId);
-    var data = {
-      content_id: results.insertId
-    }
-    res.json(data);
-
-  });
-  console.log(query)
-  res.end();
-	});
-});
 app.get('/getfile/:contentid/:filename' , function(req,res){
 	var content_id = req.params.contentid
 	var filename = req.params.filename
@@ -434,18 +439,9 @@ app.get('/get_course_announce_comment/:annouid',function(req,res) {
 })
 
 // post course_announce
+/*
 app.post('/insertcourse_announce' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
-/*
-    if(err) throw err;
-    var annou_id = req.body.annou_id;
-	  var course_id = req.body.course_id;
-	  var annou_text = req.body.annou_text
-	  var annou_ts = req.body.annou_ts;
-		var query = "INSERT INTO `course_announce`(`annou_id`,`course_id`, `annou_text`, `annou_ts`) VALUES ("+annou_id+","+course_id+",'"+annou_text+"','"+annou_ts+"')"
-
-	  connection.query(query);
-*/
 
 
     if(err) throw err;
@@ -468,6 +464,8 @@ app.post('/insertcourse_announce' , function(req,res){
     res.end();
 	})
 })
+*/
+
 
 // post course_announce_comment
 app.post('/insertcourse_announce_comment' , function(req,res){
@@ -511,21 +509,10 @@ app.get('/get_course_q_comment/:qid',function(req,res) {
 	  });
 	})
 })
-
+/*
 // post course_q
 app.post('/insertcourse_q' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
-	 /* if(err) throw err;
-    //var q_id = req.body.q_id;
-	  var course_id = req.body.course_id;
-    var user_id = req.body.user_id
-	  var q_title = req.body.q_title
-    var q_des = req.body.q_des
-	  var q_ts = req.body.q_ts;
-		var query = "INSERT INTO `course_q`(`course_id`, `user_id`, `q_title`, `q_des`, `q_ts`) VALUES ("+course_id+","+user_id+",'"+q_title+"','"+q_des+"','"+q_ts+"')"
-
-	  connection.query(query);
-*/
 
     if(err) throw err;
 	  var course_id = req.body.course_id;
@@ -541,15 +528,15 @@ app.post('/insertcourse_q' , function(req,res){
     var data = {
       q_id: results.insertId
     }
-    res.json(data);
+
 
   });
-
+    res.json(data);
   console.log(query)
     res.end();
 	})
 })
-
+*/
 // post course_q_comment
 app.post('/insertcourse_q_comment' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
@@ -848,7 +835,7 @@ app.get('/get_all_my_review/:userid',function(req,res) {
 		connection.query(query, function(err, rows) {
 			res.json(rows);
 			connection.release();
-        res.end();
+      res.end();
 		});
 	})
 })
@@ -882,9 +869,11 @@ app.get('/getchat/:course_id',  (req,res) => {
 
     console.log(new Date().getTime() - start);
     res.send(json)
+    res.end();
   })
   .catch((error) => {
     res.send(error)
+    res.end()
   })
 
 
@@ -899,36 +888,84 @@ app.get('/getchat/:course_id',  (req,res) => {
 
 })
 app.post('/insert_chat_mongo',function(req,res) {
-	var course_id = req.body.course_id
-	var user_id = req.body.user_id
-	var chat_text = req.body.chat_text
-	var chat_ts = req.body.chat_ts
+	var course_id1 = req.body.course_id
+	var user_id1 = req.body.user_id
+	var chat_text1 = req.body.chat_text
+	var chat_ts1 = req.body.chat_ts
 
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
 		var myobj = {
-			course_id: course_id,
-			user_id: user_id,
-			chat_text: chat_text,
-			chat_ts: chat_ts
+			course_id: Number.parseInt(course_id1),
+			user_id: Number.parseInt(user_id1),
+			chat_text: chat_text1,
+			chat_ts: chat_ts1
 		};
-		db.collection("course_chat").insertOne(myobj, function(err, res) {
+		db.collection("course_chat").insertOne(myobj, function(err, respone) {
 		  if (err) throw err;
 		  console.log("1 document inserted");
 		  db.close();
-		  res.end();
+      res.end();
 		});
 	  });
 
 })
 
+app.post('/insertcourse_q' , function(req,res){
+  insert_course_q(req.body)
+  .then((result) => {
+    res.send(result)
+    res.end()
+  })
+  .catch((error) => {
+    res.send(error)
+    res.end()
+  })
+
+})
+
+
+app.post('/insertcourse_announce' , function(req,res){
+  insert_announce(req.body)
+  .then((result) => {
+    res.send(result)
+    res.end()
+  })
+  .catch((error) => {
+    res.send(error)
+    res.end()
+  })
+
+})
+
+
+app.post('/insertcoursecontent', function(req,res){
+  insert_course_content(req.body)
+  .then((result) => {
+    res.send(result)
+    res.end()
+  })
+  .catch((error) => {
+    res.send(error)
+    res.end()
+  })
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const dataFromMongo = (course_id) => {
 
   return new Promise((resolve, reject) => {
       MongoClient.connect(url,(req,db) => {
+
       db.collection('course_chat').find({course_id : Number.parseInt(course_id)}).sort({"chat_ts": -1}).limit(10).toArray((err, result) => {
+
         if (err) throw err;
+
         if(result.length != 0){
           db.close()
           resolve(result)
@@ -939,6 +976,7 @@ const dataFromMongo = (course_id) => {
       })
     })
 })
+
 }
 
 const dataFromMySQL = (data) => {
@@ -963,6 +1001,89 @@ const dataFromMySQL = (data) => {
         })
       })
     })
+  })
+}
+
+
+
+
+const insert_course_q = (body_json) =>{
+  return new Promise((resolve, reject) => {
+    mysqlPool.getConnection(function(err, connection) {
+    //  console.log(body_json)
+      if(err) throw err;
+      var course_id = body_json.course_id;
+      var user_id = body_json.user_id
+      var q_title = body_json.q_title
+      var q_des = body_json.q_des
+      var q_ts = body_json.q_ts;
+
+      var query = "INSERT INTO `course_q`(`course_id`, `user_id`, `q_title`, `q_des`, `q_ts`) VALUES ("+course_id+","+user_id+",'"+q_title+"','"+q_des+"','"+q_ts+"')"
+
+      connection.query(query, function (error, results, fields) {
+      if (error) throw error;
+      //  console.log("q_id= " + results.insertId);
+      var data = {
+        q_id: results.insertId
+      }
+      connection.release();
+      resolve(data)
+
+    });
+
+    })
+})
+}
+
+
+const insert_announce = (body_json) =>{
+  return new Promise((resolve , reject )=>{
+    mysqlPool.getConnection(function(err, connection) {
+
+      if(err) throw err;
+  	  var course_id = body_json.course_id;
+  	  var annou_text = body_json.annou_text
+  	  var annou_ts = body_json.annou_ts;
+      var query = "INSERT INTO `course_announce`(`course_id`, `annou_text`, `annou_ts`) VALUES ("+course_id+",'"+annou_text+"','"+annou_ts+"')"
+
+      connection.query(query, function (error, results, fields) {
+      if (error) throw error;
+        console.log("annou_id= " + results.insertId);
+      var data = {
+        annou_id: results.insertId
+      }
+      connection.release();
+      resolve(data);
+
+
+    });
+
+  	})
+  })
+}
+
+
+const insert_course_content = (body_json) =>{
+  return new Promise((resolve , reject )=>{
+    mysqlPool.getConnection(function(error,connection) {
+
+      var course_id = body_json.course_id
+      var content_title = body_json.content_title
+      var content_des =  body_json.content_des
+      var content_ts = body_json.content_ts
+      var query = "INSERT INTO `course_content`(`course_id`, `content_title`, `content_des`, `content_ts`) VALUES("+course_id+",'"+content_title+"','"+content_des+"','"+content_ts+"')"
+
+      connection.query(query, function (error, results, fields) {
+      if (error) throw error;
+        console.log("content_id = " + results.insertId);
+      var data = {
+        content_id: results.insertId
+      }
+      connection.release();
+      resolve(data);
+    });
+
+    });
   })
 }
 
