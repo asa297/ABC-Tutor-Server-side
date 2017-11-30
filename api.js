@@ -35,7 +35,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 var mysqlPool = mysql.createPool({
-    host     : '104.167.197',
+    host     : '172.104.167.197',
     user     : 'root',
     password : 'my-secret-pw',
     database : 'tutordb'
@@ -229,7 +229,7 @@ app.get('/popularcourse/:branch' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
 	  if(err) throw err;
 	  var branch = req.params.branch
-	  var query = "SELECT c.course_id, c.user_id, c.branch_id, c.subject, c.code, c.price, c.des as des, c.cover as cover, c.ts, c.lastUpdate, u.fname, u.lname, u.user_img,u.email, u.facebook, u.twitter, u.youtube, cr.five , cr.four , cr.three , cr.two , cr.one , ROUND(cr.avg,1) AS avg , cr.length FROM (SELECT course_id, COUNT(course_id) as count FROM user_purchase WHERE branch_id = "+branch+" GROUP BY course_id ORDER BY count DESC limit 5) up LEFT JOIN course c ON c.course_id = up.course_id LEFT JOIN course_rating cr ON cr.course_id = up.course_id LEFT JOIN user u ON u.user_id = c.user_id"
+	  var query = "SELECT c.course_id, c.user_id, c.branch_id, c.subject, c.code, c.price, c.des as des, c.cover as cover, c.ts, c.lastUpdate, u.fname, u.lname, u.user_img,u.email, u.facebook, u.twitter, u.youtube, cr.five , cr.four , cr.three , cr.two , cr.one , ROUND(cr.avg,1) AS avg , cr.length FROM (SELECT course_id, COUNT(course_id) as count FROM user_purchase WHERE branch_id = "+branch+" GROUP BY course_id ORDER BY count DESC limit 4) up LEFT JOIN course c ON c.course_id = up.course_id LEFT JOIN course_rating cr ON cr.course_id = up.course_id LEFT JOIN user u ON u.user_id = c.user_id"
 	  connection.query(query, function(err, rows) {
 		res.json(rows);
 		connection.release();
@@ -668,12 +668,25 @@ app.get('/get_all_userfavorite/:userid',function(req,res) {
 })
 
 // insert user_favorite
-app.post('/insertusertoroom' , function(req,res){
+app.post('/insert_course_fav' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
 	  if(err) throw err;
 	  var course_id = req.body.course_id;
     var user_id = req.body.user_id
-		var query = "INSERT INTO `user_favorite`(`course_id`, `user_id`) VALUES ("+course_id+","+user_Id+")"
+		var query = "INSERT INTO `user_favorite`(`course_id`, `user_id`) VALUES ("+course_id+","+user_id+")"
+    connection.query(query);
+    res.end();
+	})
+})
+
+
+//delete user_favorite
+app.get('/delte_course_fav/:courseid/:userid' , function(req,res){
+	mysqlPool.getConnection(function(err, connection) {
+	  if(err) throw err;
+	  var course_id = req.params.courseid
+    var user_id = req.params.userid
+		var query = "DELETE FROM `user_favorite` WHERE course_id = "+course_id+" AND user_id = "+user_id+""
     connection.query(query);
       res.end();
 	})
