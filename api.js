@@ -681,11 +681,11 @@ app.post('/insert_course_fav' , function(req,res){
 
 
 //delete user_favorite
-app.get('/delte_course_fav/:courseid/:userid' , function(req,res){
+app.post('/delete_course_fav' , function(req,res){
 	mysqlPool.getConnection(function(err, connection) {
 	  if(err) throw err;
-	  var course_id = req.params.courseid
-    var user_id = req.params.userid
+	  var course_id = req.body.course_id
+    var user_id = req.body.user_id
 		var query = "DELETE FROM `user_favorite` WHERE course_id = "+course_id+" AND user_id = "+user_id+""
     connection.query(query);
       res.end();
