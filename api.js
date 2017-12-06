@@ -85,15 +85,15 @@ app.get('/getcourse/:branchid/',function(req,res) {
 
 //get all course in any branch
 app.get('/courselength/:branchid',function(req,res) {
-  //var start = new Date().getTime();
+  var start = new Date().getTime();
 	mysqlPool.getConnection(function(err, connection) {
 	  if(err) throw err;
 		var branch_id = req.params.branchid
 		var query = "SELECT COUNT(*) as count FROM `course` WHERE branch_id = "+branch_id+" "
 	  connection.query(query , function(err, rows) {
-    //var end = new Date().getTime();
-    //var time = end - start;
-    //console.log("time get (ms) = " + time)
+    var end = new Date().getTime();
+    var time = end - start;
+    console.log("time get (ms) = " + time)
 		res.json(rows);
 		connection.release();
     res.end();
@@ -102,23 +102,23 @@ app.get('/courselength/:branchid',function(req,res) {
 });
 
 
-// app.post('/courselength',function(req,res) {
-//
-//   var start = new Date().getTime();
-// 	mysqlPool.getConnection(function(err, connection) {
-// 	  if(err) throw err;
-// 		var branch_id = req.body.branchid
-// 		var query = "SELECT COUNT(*) as count FROM `course` WHERE branch_id = "+branch_id+" "
-// 	  connection.query(query , function(err, rows) {
-//       var end = new Date().getTime();
-//       var time = end - start;
-//       console.log("time post (ms) = " + time)
-// 		res.json(rows);
-// 		connection.release();
-//     res.end();
-// 	  });
-// 	});
-// });
+app.post('/courselength',function(req,res) {
+
+  var start = new Date().getTime();
+	mysqlPool.getConnection(function(err, connection) {
+	  if(err) throw err;
+		var branch_id = req.body.branchid
+		var query = "SELECT COUNT(*) as count FROM `course` WHERE branch_id = "+branch_id+" "
+	  connection.query(query , function(err, rows) {
+      var end = new Date().getTime();
+      var time = end - start;
+      console.log("time post (ms) = " + time)
+		res.json(rows);
+		connection.release();
+    res.end();
+	  });
+	});
+});
 
 
 

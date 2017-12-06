@@ -12,7 +12,7 @@ var omise = require('omise')({
   'omiseVersion': '2015-09-10'
 });
 var mysqlPool = mysql.createPool({
-    host     : '104.167.197',
+    host     : '172.104.167.197',
     user     : 'root',
     password : 'my-secret-pw',
     database : 'tutordb'
