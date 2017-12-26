@@ -85,44 +85,17 @@ app.get('/getcourse/:branchid/',function(req,res) {
 
 //get all course in any branch
 app.get('/courselength/:branchid',function(req,res) {
-  var start = new Date().getTime();
 	mysqlPool.getConnection(function(err, connection) {
 	  if(err) throw err;
 		var branch_id = req.params.branchid
 		var query = "SELECT COUNT(*) as count FROM `course` WHERE branch_id = "+branch_id+" "
 	  connection.query(query , function(err, rows) {
-    var end = new Date().getTime();
-    var time = end - start;
-    console.log("time get (ms) = " + time)
 		res.json(rows);
 		connection.release();
     res.end();
 	  });
 	});
 });
-
-
-app.post('/courselength',function(req,res) {
-
-  var start = new Date().getTime();
-	mysqlPool.getConnection(function(err, connection) {
-	  if(err) throw err;
-		var branch_id = req.body.branchid
-		var query = "SELECT COUNT(*) as count FROM `course` WHERE branch_id = "+branch_id+" "
-	  connection.query(query , function(err, rows) {
-      var end = new Date().getTime();
-      var time = end - start;
-      console.log("time post (ms) = " + time)
-		res.json(rows);
-		connection.release();
-    res.end();
-	  });
-	});
-});
-
-
-
-
 
 app.post('/insertcourse', function (req,res) {
 	mysqlPool.getConnection(function(err, connection) {
@@ -990,6 +963,49 @@ app.post('/insertcoursecontent', function(req,res){
     res.end()
   })
 });
+
+
+app.post('/update_course_live', function(req,res){
+	mysqlPool.getConnection(function(error,connection) {
+		var course_id = req.body.course_id
+		var live_text = req.body.live_text
+		var live_schedule = req.body.live_schedule
+
+		var query = "UPDATE course_live set live_schedule = '"+live_schedule+"',live_text ='"+live_text+"' WHERE course_id = "+course_id+""
+
+		connection.query(query, function(){
+  res.end();
+		})
+	});
+});
+
+app.post('/update_course_live_status', function(req,res){
+	mysqlPool.getConnection(function(error,connection) {
+		var course_id = req.body.course_id
+		var live_status = req.body.live_status
+
+		var query = "UPDATE course_live set live_status = "+live_status+" WHERE course_id = "+course_id+""
+
+		connection.query(query, function(){
+  res.end();
+		})
+	});
+});
+
+app.get('/get_course_live/:courseid',function(req,res) {
+	mysqlPool.getConnection(function(err, connection) {
+	  if(err) throw err;
+	  var course_id = req.params.courseid
+		var query = "SELECT course_id , live_status , DATE_FORMAT(live_schedule, '%Y-%m-%d %H:%i:%s') AS live_schedule , live_text FROM course_live WHERE course_id = "+course_id+""
+    connection.query(query, function(err, rows) {
+			res.json(rows);
+			connection.release();
+      res.end();
+		});
+	})
+})
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
